@@ -1,3 +1,23 @@
+/* --- 在 style.css 文件最顶部添加调试样式 --- */
+/* 这能让我们看清关键容器的位置和大小 */
+body {
+    border: 5px solid red;
+}
+main {
+    border: 3px solid blue;
+}
+#workspace {
+    border: 3px solid green;
+}
+.sidebar {
+    border: 2px solid orange;
+}
+.main-panel {
+    border: 2px solid purple;
+}
+/* --- 调试样式结束 --- */
+
+/* ... 你现有的所有其他CSS样式保持不变 ... */
 /* --- 全局与基础样式 (关键修复区) --- */
 :root {
     --primary-color: #4a69bd;
