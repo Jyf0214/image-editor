@@ -1,36 +1,43 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <!-- ... meta tags and links to cropper.css/style.css remain the same ... -->
-    <title>高级图片处理器 </title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高级图片处理器 - 模态框日志版</title>
+    <!-- 依赖库的CSS链接保持不变 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- ... header, main sections remain the same ... -->
+    <!-- 网页的主体内容 (header, main) 保持不变 -->
+    <header>
+        <!-- ... 头部内容 ... -->
+    </header>
+    <main>
+        <!-- ... 工作区内容 ... -->
     </main>
 
-    <!-- 更新日志区域现在是一个空的容器 -->
-    <section id="changelog">
-        <h2>版本更新</h2>
-        <div id="changelog-content">
-            <p>正在加载更新日志...</p>
-        </div>
-    </section>
-
     <footer>
-        <p>由 AI 构建的纯前端图片处理工具</p>
+        <p>由 AI 构建的纯前端图片处理工具 | <a href="#" id="show-changelog-link">查看更新日志 (v3.3)</a></p>
     </footer>
 
-    <!-- 引入库文件 -->
+    <!-- 新增：更新日志模态框的HTML结构 -->
+    <div id="changelog-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="modal-close-btn">×</button>
+            <h2>版本更新日志</h2>
+            <div id="changelog-content-area">
+                <!-- 日志内容将动态加载到这里 -->
+                <p>正在加载...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 依赖库的JS链接保持不变 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
-    
-    <!-- 新增：引入 Markdown 解析和安全库 -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
-
-    <!-- 引入你自己的脚本 -->
     <script src="script.js"></script>
 </body>
 </html>
