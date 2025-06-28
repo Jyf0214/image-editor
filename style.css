@@ -115,15 +115,3 @@ footer a:hover { text-decoration: underline; }
 #changelog-content-area hr { border: 0; border-top: 1px solid #eee; margin: 1.5rem 0; }
 @media (max-width: 992px) { #workspace { flex-direction: column; } .sidebar, .main-panel { width: 100%; } }
 @media (max-width: 768px) { main { margin: 1rem auto; } header h1 { font-size: 1.8rem; } #drop-zone { padding: 2rem 1rem; } .tab-content { padding: 1rem; } #cropper-container { flex-direction: column; } .modal-content { padding: 1.5rem 1rem; } }
-/* 缩略图懒加载占位符样式 */
-.file-item img.lazy-thumb {
-    background-color: #e9ecef; /* 灰色背景 */
-    /* 可以添加一个简单的加载动画 */
-    animation: pulse 1.5s infinite ease-in-out;
-}
-
-@keyframes pulse {
-    0% { background-color: #e9ecef; }
-    50% { background-color: #f8f9fa; }
-    100% { background-color: #e9ecef; }
-}
