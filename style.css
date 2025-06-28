@@ -255,3 +255,51 @@ input[type="range"] { flex-grow: 1; }
     .tab-content { padding: 1.5rem; }
     #cropper-container { flex-direction: column; }
 }
+
+/* 加载覆盖层样式 */
+#loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.85);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
+
+/* 转圈圈的Spinner动画 */
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid #f3f3f3; /* Light grey */
+    border-top: 6px solid var(--primary-color); /* Blue */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1.5rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#progress-text {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+/* 按钮禁用状态 */
+button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+button.secondary-btn:disabled {
+    background-color: #a0a0a0;
+}
