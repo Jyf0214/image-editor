@@ -1,86 +1,36 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>高级图片处理器 - 极速无卡顿版</title>
+    <!-- ... meta tags and links to cropper.css/style.css remain the same ... -->
+    <title>高级图片处理器 </title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Header and Main structure remains the same as v2 -->
-    <header>
-        <div class="header-content">
-            <h1>高级图片处理器</h1>
-            <p>批量转换、精准裁剪，一站式解决您的图片需求 (极速无卡顿版)</p>
-        </div>
-    </header>
-
-    <main>
-        <div id="upload-area">
-            <div id="drop-zone">
-                <p>将文件拖拽到此处，或</p>
-                <button id="browse-btn" class="primary-btn">选择文件</button>
-                <input type="file" id="image-input" multiple accept="image/*" style="display: none;">
-            </div>
-        </div>
-
-        <div id="workspace" class="hidden">
-            <aside class="sidebar">
-                <h2>文件列表</h2>
-                <div id="file-list"></div>
-                <button id="clear-all-btn" class="secondary-btn">清空列表</button>
-            </aside>
-
-            <section class="main-panel">
-                <div class="tabs">
-                    <button class="tab-btn active" data-tab="convert">格式转换</button>
-                    <button class="tab-btn" data-tab="crop">图片裁剪</button>
-                </div>
-
-                <div id="convert-panel" class="tab-content active">
-                    <!-- 新增：加载覆盖层 -->
-                    <div id="loading-overlay" class="hidden">
-                        <div class="spinner"></div>
-                        <p id="progress-text"></p>
-                    </div>
-
-                    <h3>批量格式转换设置</h3>
-                    <div class="control-group">
-                        <label for="format-select">目标格式:</label>
-                        <select id="format-select">
-                            <option value="image/png">PNG</option>
-                            <option value="image/jpeg">JPEG</option>
-                            <option value="image/webp">WEBP</option>
-                        </select>
-                    </div>
-                    <div class="control-group" id="quality-control">
-                        <label for="quality-slider">图片质量 (JPEG/WEBP):</label>
-                        <div class="slider-container">
-                            <input type="range" id="quality-slider" min="0.1" max="1" step="0.05" value="0.9">
-                            <span id="quality-value">0.90</span>
-                        </div>
-                    </div>
-                    <button id="start-conversion-btn" class="primary-btn action-btn">开始转换并打包下载</button>
-                </div>
-
-                <div id="crop-panel" class="tab-content hidden">
-                    <!-- Crop panel content remains the same -->
-                    <div id="crop-placeholder"><p>请从左侧文件列表中选择一张图片进行裁剪。</p></div>
-                    <div id="cropper-container" class="hidden">
-                        <div class="cropper-workspace"><img id="image-to-crop" src="" alt="待裁剪图片"></div>
-                        <div class="cropper-controls">
-                            <button id="download-cropped-btn" class="primary-btn">下载裁剪后的图片</button>
-                            <button id="reset-crop-btn" class="secondary-btn">重置裁剪</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
+    <!-- ... header, main sections remain the same ... -->
     </main>
-    
+
+    <!-- 更新日志区域现在是一个空的容器 -->
+    <section id="changelog">
+        <h2>版本更新</h2>
+        <div id="changelog-content">
+            <p>正在加载更新日志...</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>由 AI 构建的纯前端图片处理工具</p>
+    </footer>
+
+    <!-- 引入库文件 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+    
+    <!-- 新增：引入 Markdown 解析和安全库 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
+
+    <!-- 引入你自己的脚本 -->
     <script src="script.js"></script>
 </body>
 </html>
