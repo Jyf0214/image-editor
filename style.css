@@ -1,162 +1,257 @@
-/* 全局样式 */
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    line-height: 1.6;
-    background-color: #f4f7f9;
-    color: #333;
+/* --- 全局与基础样式 --- */
+:root {
+    --primary-color: #4a69bd;
+    --primary-hover: #3c569a;
+    --secondary-color: #6c757d;
+    --secondary-hover: #5a6268;
+    --bg-color: #f8f9fa;
+    --surface-color: #ffffff;
+    --text-color: #212529;
+    --border-color: #dee2e6;
+    --drop-zone-bg: #e9ecef;
+    --font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
     margin: 0;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-}
-
-header, main, footer {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-header {
-    text-align: center;
-    margin-bottom: 2rem;
-    border-bottom: 1px solid #e0e0e0;
-    padding-bottom: 1rem;
-}
-
-header h1 {
-    color: #1a237e;
-    margin-bottom: 0.5rem;
-}
-
-main {
-    flex-grow: 1;
-}
-
-footer {
-    text-align: center;
-    margin-top: 2rem;
-    padding-top: 1rem;
-    font-size: 0.9em;
-    color: #888;
-    border-top: 1px solid #e0e0e0;
-}
-
-/* 控制区域样式 */
-.controls-section, .placeholder-section {
-    background-color: #fff;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    text-align: center;
-}
-
-/* 编辑区域 */
-#editor-area {
-    margin-top: 2rem;
-    background-color: #fff;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px B12px rgba(0, 0, 0, 0.08);
-}
-
-.main-content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-}
-
-.image-workspace {
-    flex: 3; /* 占据更大空间 */
-    min-width: 300px;
-    max-height: 600px;
-    background-color: #e8eff5;
-    border: 1px dashed #a0b3c4;
-    border-radius: 8px;
-    overflow: hidden; /* 保证图片在容器内 */
-}
-
-#image-to-crop {
-    display: block;
-    max-width: 100%; /* 确保图片响应式 */
-}
-
-.controls-panel {
-    flex: 1; /* 占据较小空间 */
-    min-width: 280px;
-}
-
-.control-group {
-    margin-bottom: 1.5rem;
-}
-
-.control-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-    color: #555;
-}
-
-/* 表单元素样式 */
-input[type="file"] {
-    display: block;
-    margin: 0 auto;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-select, input[type="range"] {
-    width: 100%;
-    padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-}
-
-input[type="range"] {
     padding: 0;
 }
 
-#quality-value {
-    font-weight: bold;
-    color: #1a237e;
-    margin-left: 10px;
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
 }
 
-/* 按钮样式 */
-button {
-    display: block;
-    width: 100%;
-    padding: 12px 20px;
-    font-size: 1.1em;
-    font-weight: bold;
-    color: #fff;
-    background-color: #3f51b5; /* 主色调 */
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.1s;
+/* --- 头部 --- */
+header {
+    background: linear-gradient(90deg, var(--primary-color), #6a89cc);
+    color: white;
+    padding: 2rem 1rem;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-button:hover {
-    background-color: #303f9f;
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
 }
 
-button:active {
-    transform: translateY(1px);
+/* --- 主内容区 --- */
+main {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 1rem;
 }
 
-.secondary-btn {
-    background-color: #78909c;
+/* --- 上传区域 --- */
+#upload-area {
+    padding: 2rem;
+}
+
+#drop-zone {
+    border: 3px dashed var(--border-color);
+    border-radius: 12px;
+    padding: 4rem;
+    text-align: center;
+    background-color: var(--drop-zone-bg);
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+#drop-zone.dragover {
+    background-color: #dbe4f0;
+    border-color: var(--primary-color);
+}
+
+#drop-zone p {
+    font-size: 1.2rem;
     margin-bottom: 1rem;
 }
 
-.secondary-btn:hover {
-    background-color: #607d8b;
+/* --- 工作区 --- */
+#workspace {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
 }
 
-/* 辅助类 */
-.hidden {
-    display: none;
+/* --- 侧边栏 (文件列表) --- */
+.sidebar {
+    flex: 1;
+    min-width: 280px;
+    background-color: var(--surface-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+#file-list {
+    max-height: 500px;
+    overflow-y: auto;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border: 1px solid var(--border-color);
+}
+
+.file-item:hover {
+    background-color: #f1f3f5;
+}
+
+.file-item.selected {
+    background-color: #dbe4f0;
+    border-color: var(--primary-color);
+}
+
+.file-item img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-right: 1rem;
+}
+
+.file-info {
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.file-info .name {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
+}
+
+.file-info .size {
+    font-size: 0.8rem;
+    color: var(--secondary-color);
+}
+
+/* --- 主面板 (功能区) --- */
+.main-panel {
+    flex: 3;
+    background-color: var(--surface-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.tabs {
+    display: flex;
+    background-color: #e9ecef;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    border-bottom: 3px solid transparent;
+}
+
+.tab-btn.active {
+    color: var(--primary-color);
+    background-color: var(--surface-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.tab-content {
+    padding: 2rem;
+}
+
+/* --- 裁剪面板 --- */
+#cropper-container {
+    display: flex;
+    gap: 1.5rem;
+}
+.cropper-workspace {
+    flex: 3;
+    min-height: 400px;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+}
+#image-to-crop { display: block; max-width: 100%; }
+.cropper-controls { flex: 1; }
+#crop-placeholder { text-align: center; padding: 4rem; color: var(--secondary-color); }
+
+
+/* --- 通用组件 --- */
+.control-group { margin-bottom: 1.5rem; }
+.control-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+select {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    font-size: 1rem;
+}
+.slider-container { display: flex; align-items: center; gap: 1rem; }
+input[type="range"] { flex-grow: 1; }
+
+.primary-btn, .secondary-btn {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.primary-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+.primary-btn:hover { background-color: var(--primary-hover); }
+
+.secondary-btn {
+    background-color: var(--secondary-color);
+    color: white;
+    width: 100%;
+    margin-top: 1rem;
+}
+.secondary-btn:hover { background-color: var(--secondary-hover); }
+
+.action-btn { width: 100%; padding: 1rem; font-size: 1.1rem; }
+
+#processing-indicator {
+    margin-top: 1rem;
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.hidden { display: none !important; }
+
+/* --- 响应式布局 --- */
+@media (max-width: 992px) {
+    #workspace {
+        flex-direction: column;
+    }
+    .sidebar, .main-panel {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    header h1 { font-size: 2rem; }
+    #drop-zone { padding: 2rem; }
+    .tab-content { padding: 1.5rem; }
+    #cropper-container { flex-direction: column; }
 }
