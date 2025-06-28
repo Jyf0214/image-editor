@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>在线图片编辑器 - 格式转换与裁剪</title>
+    <title>高级图片处理器 - 批量转换与裁剪</title>
     <!-- 引入 Cropper.js 的 CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" rel="stylesheet">
     <!-- 引入自定义的 CSS -->
@@ -12,62 +12,81 @@
 <body>
 
     <header>
-        <h1>在线图片编辑器</h1>
-        <p>轻松完成图片格式转换、裁剪和压缩</p>
+        <div class="header-content">
+            <h1>高级图片处理器</h1>
+            <p>批量转换、精准裁剪，一站式解决您的图片需求</p>
+        </div>
     </header>
 
     <main>
-        <!-- 步骤一：上传图片 -->
-        <section class="controls-section">
-            <h2>1. 选择一张图片</h2>
-            <input type="file" id="image-input" accept="image/*">
-        </section>
+        <!-- 初始状态：文件上传区域 -->
+        <div id="upload-area">
+            <div id="drop-zone">
+                <p>将文件拖拽到此处，或</p>
+                <button id="browse-btn" class="primary-btn">选择文件</button>
+                <input type="file" id="image-input" multiple accept="image/*" style="display: none;">
+            </div>
+        </div>
 
-        <!-- 步骤二：编辑和设置 -->
-        <section id="editor-area" class="hidden">
-            <div class="main-content">
-                <!-- 图片裁剪区域 -->
-                <div class="image-workspace">
-                    <img id="image-to-crop" src="" alt="待裁剪的图片">
+        <!-- 工作区：上传文件后显示 -->
+        <div id="workspace" class="hidden">
+            <!-- 左侧：文件列表和功能切换 -->
+            <aside class="sidebar">
+                <h2>文件列表</h2>
+                <div id="file-list"></div>
+                <button id="clear-all-btn" class="secondary-btn">清空列表</button>
+            </aside>
+
+            <!-- 右侧：主操作面板 -->
+            <section class="main-panel">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="convert">格式转换</button>
+                    <button class="tab-btn" data-tab="crop">图片裁剪</button>
                 </div>
 
-                <!-- 控制面板 -->
-                <div class="controls-panel">
-                    <h2>2. 设置与裁剪</h2>
-                    
+                <!-- 面板1: 格式转换 -->
+                <div id="convert-panel" class="tab-content active">
+                    <h3>批量格式转换设置</h3>
                     <div class="control-group">
-                        <label for="format-select">转换格式:</label>
+                        <label for="format-select">目标格式:</label>
                         <select id="format-select">
                             <option value="image/png">PNG</option>
                             <option value="image/jpeg">JPEG</option>
                             <option value="image/webp">WEBP</option>
                         </select>
                     </div>
-
                     <div class="control-group" id="quality-control">
-                        <label for="quality-slider">图片质量 (仅JPEG/WEBP):</label>
-                        <input type="range" id="quality-slider" min="0.1" max="1" step="0.1" value="0.9">
-                        <span id="quality-value">0.9</span>
+                        <label for="quality-slider">图片质量 (JPEG/WEBP):</label>
+                        <div class="slider-container">
+                            <input type="range" id="quality-slider" min="0.1" max="1" step="0.05" value="0.9">
+                            <span id="quality-value">0.90</span>
+                        </div>
                     </div>
-
-                    <button id="reset-crop-btn" class="secondary-btn">重置裁剪框</button>
-
-                    <h2>3. 生成并下载</h2>
-                    <button id="process-btn">转换并下载</button>
+                    <button id="start-conversion-btn" class="primary-btn action-btn">开始转换并打包下载</button>
+                    <div id="processing-indicator" class="hidden">正在处理中，请稍候...</div>
                 </div>
-            </div>
-        </section>
 
-         <section id="placeholder" class="placeholder-section">
-            <p>请先选择一张图片以开始编辑...</p>
-        </section>
-
+                <!-- 面板2: 图片裁剪 -->
+                <div id="crop-panel" class="tab-content hidden">
+                    <div id="crop-placeholder">
+                        <p>请从左侧文件列表中选择一张图片进行裁剪。</p>
+                    </div>
+                    <div id="cropper-container" class="hidden">
+                        <div class="cropper-workspace">
+                           <img id="image-to-crop" src="" alt="待裁剪图片">
+                        </div>
+                        <div class="cropper-controls">
+                            <button id="download-cropped-btn" class="primary-btn">下载裁剪后的图片</button>
+                            <button id="reset-crop-btn" class="secondary-btn">重置裁剪</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
     </main>
-
-    <footer>
-        <p>由 AI 构建的纯前端图片处理工具</p>
-    </footer>
-
+    
+    <!-- 引入 JSZip for zipping files -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <!-- 引入 Cropper.js 的 JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
     <!-- 引入自定义的 JS -->
