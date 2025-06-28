@@ -3,23 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>高级图片处理器 - 批量转换与裁剪</title>
-    <!-- 引入 Cropper.js 的 CSS -->
+    <title>高级图片处理器 - 极速无卡顿版</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" rel="stylesheet">
-    <!-- 引入自定义的 CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
+    <!-- Header and Main structure remains the same as v2 -->
     <header>
         <div class="header-content">
             <h1>高级图片处理器</h1>
-            <p>批量转换、精准裁剪，一站式解决您的图片需求</p>
+            <p>批量转换、精准裁剪，一站式解决您的图片需求 (极速无卡顿版)</p>
         </div>
     </header>
 
     <main>
-        <!-- 初始状态：文件上传区域 -->
         <div id="upload-area">
             <div id="drop-zone">
                 <p>将文件拖拽到此处，或</p>
@@ -28,24 +25,26 @@
             </div>
         </div>
 
-        <!-- 工作区：上传文件后显示 -->
         <div id="workspace" class="hidden">
-            <!-- 左侧：文件列表和功能切换 -->
             <aside class="sidebar">
                 <h2>文件列表</h2>
                 <div id="file-list"></div>
                 <button id="clear-all-btn" class="secondary-btn">清空列表</button>
             </aside>
 
-            <!-- 右侧：主操作面板 -->
             <section class="main-panel">
                 <div class="tabs">
                     <button class="tab-btn active" data-tab="convert">格式转换</button>
                     <button class="tab-btn" data-tab="crop">图片裁剪</button>
                 </div>
 
-                <!-- 面板1: 格式转换 -->
                 <div id="convert-panel" class="tab-content active">
+                    <!-- 新增：加载覆盖层 -->
+                    <div id="loading-overlay" class="hidden">
+                        <div class="spinner"></div>
+                        <p id="progress-text"></p>
+                    </div>
+
                     <h3>批量格式转换设置</h3>
                     <div class="control-group">
                         <label for="format-select">目标格式:</label>
@@ -63,18 +62,13 @@
                         </div>
                     </div>
                     <button id="start-conversion-btn" class="primary-btn action-btn">开始转换并打包下载</button>
-                    <div id="processing-indicator" class="hidden">正在处理中，请稍候...</div>
                 </div>
 
-                <!-- 面板2: 图片裁剪 -->
                 <div id="crop-panel" class="tab-content hidden">
-                    <div id="crop-placeholder">
-                        <p>请从左侧文件列表中选择一张图片进行裁剪。</p>
-                    </div>
+                    <!-- Crop panel content remains the same -->
+                    <div id="crop-placeholder"><p>请从左侧文件列表中选择一张图片进行裁剪。</p></div>
                     <div id="cropper-container" class="hidden">
-                        <div class="cropper-workspace">
-                           <img id="image-to-crop" src="" alt="待裁剪图片">
-                        </div>
+                        <div class="cropper-workspace"><img id="image-to-crop" src="" alt="待裁剪图片"></div>
                         <div class="cropper-controls">
                             <button id="download-cropped-btn" class="primary-btn">下载裁剪后的图片</button>
                             <button id="reset-crop-btn" class="secondary-btn">重置裁剪</button>
@@ -85,11 +79,8 @@
         </div>
     </main>
     
-    <!-- 引入 JSZip for zipping files -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <!-- 引入 Cropper.js 的 JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
-    <!-- 引入自定义的 JS -->
     <script src="script.js"></script>
 </body>
 </html>
