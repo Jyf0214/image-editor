@@ -2,7 +2,7 @@
 
 这是一个功能强大的纯前端在线图片处理工具，旨在提供快速、流畅、无服务器依赖的图片批量转换与精准裁剪功能。项目采用现代Web技术构建，注重用户体验和性能。
 
-**在线访问:** [在这里插入你的GitHub Pages链接](https://jyf0214.github.io/image-editor/)
+**在线访问:** [高级图片处理器 (Advanced Image Processor)](https://jyf0214.github.io/image-editor/)
 
 ---
 
