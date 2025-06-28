@@ -1,0 +1,162 @@
+/* 全局样式 */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f7f9;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+header, main, footer {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 1rem;
+}
+
+header h1 {
+    color: #1a237e;
+    margin-bottom: 0.5rem;
+}
+
+main {
+    flex-grow: 1;
+}
+
+footer {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    font-size: 0.9em;
+    color: #888;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* 控制区域样式 */
+.controls-section, .placeholder-section {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+/* 编辑区域 */
+#editor-area {
+    margin-top: 2rem;
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px B12px rgba(0, 0, 0, 0.08);
+}
+
+.main-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.image-workspace {
+    flex: 3; /* 占据更大空间 */
+    min-width: 300px;
+    max-height: 600px;
+    background-color: #e8eff5;
+    border: 1px dashed #a0b3c4;
+    border-radius: 8px;
+    overflow: hidden; /* 保证图片在容器内 */
+}
+
+#image-to-crop {
+    display: block;
+    max-width: 100%; /* 确保图片响应式 */
+}
+
+.controls-panel {
+    flex: 1; /* 占据较小空间 */
+    min-width: 280px;
+}
+
+.control-group {
+    margin-bottom: 1.5rem;
+}
+
+.control-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #555;
+}
+
+/* 表单元素样式 */
+input[type="file"] {
+    display: block;
+    margin: 0 auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+select, input[type="range"] {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+input[type="range"] {
+    padding: 0;
+}
+
+#quality-value {
+    font-weight: bold;
+    color: #1a237e;
+    margin-left: 10px;
+}
+
+/* 按钮样式 */
+button {
+    display: block;
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #fff;
+    background-color: #3f51b5; /* 主色调 */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+button:hover {
+    background-color: #303f9f;
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+.secondary-btn {
+    background-color: #78909c;
+    margin-bottom: 1rem;
+}
+
+.secondary-btn:hover {
+    background-color: #607d8b;
+}
+
+/* 辅助类 */
+.hidden {
+    display: none;
+}
