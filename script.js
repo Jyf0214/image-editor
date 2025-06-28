@@ -241,3 +241,41 @@ document.addEventListener('DOMContentLoaded', () => {
         URL.revokeObjectURL(link.href);
     }
 });
+
+/**
+ * 异步加载并渲染 changelog.md 文件
+ */
+async function loadChangelog() {
+    const changelogContainer = document.getElementById('changelog-content');
+    if (!changelogContainer) return;
+
+    try {
+        // 1. 获取 Markdown 文件内容
+        const response = await fetch('changelog.md');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const markdownText = await response.text();
+
+        // 2. 使用 Marked.js 将 Markdown 转换为 HTML
+        const rawHtml = marked.parse(markdownText);
+        
+        // 3. 使用 DOMPurify 清洗 HTML，防止 XSS 攻击
+        const sanitizedHtml = DOMPurify.sanitize(rawHtml);
+        
+        // 4. 将安全的 HTML 插入到页面
+        changelogContainer.innerHTML = sanitizedHtml;
+
+    } catch (error) {
+        console.error('Failed to load changelog:', error);
+        changelogContainer.innerHTML = '<p style="color: red;">无法加载更新日志。请检查网络连接或联系管理员。</p>';
+    }
+}
+
+// 在 DOM 加载完成后，立即执行日志加载函数
+document.addEventListener('DOMContentLoaded', () => {
+    // ... 你现有的所有 DOMContentLoaded 代码都在这里 ...
+    
+    // 在最后调用新的函数
+    loadChangelog();
+});
