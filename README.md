@@ -47,8 +47,8 @@
 
 1.  **克隆或下载项目**:
     ```bash
-    git clone https://github.com/your-username/your-repo-name.git
-    cd your-repo-name
+    git clone https://github.com/Jyf0214/image-editor.git
+    cd image-editor
     ```
 
 2.  **启动本地服务器**:
