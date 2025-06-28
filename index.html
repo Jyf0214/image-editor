@@ -3,37 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>高级图片处理器 - 模态框日志版</title>
-    <!-- 依赖库的CSS链接保持不变 -->
+    <title>高级图片处理器 - 调试模式</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- 网页的主体内容 (header, main) 保持不变 -->
+
     <header>
-        <!-- ... 头部内容 ... -->
+        <div class="header-content">
+            <h1>高级图片处理器</h1>
+            <p>批量转换、精准裁剪 (调试模式)</p>
+        </div>
     </header>
+
     <main>
-        <!-- ... 工作区内容 ... -->
+        <!-- 注意：这里的 #upload-area 仍然可以是隐藏的，因为我们想看 workspace -->
+        <div id="upload-area" class="hidden"> 
+            <div id="drop-zone">
+                <p>将文件拖拽到此处，或</p>
+                <button id="browse-btn" class="primary-btn">选择文件</button>
+                <input type="file" id="image-input" multiple accept="image/*" style="display: none;">
+            </div>
+        </div>
+
+        <!-- 关键改动：移除了 hidden 类，让它默认就显示 -->
+        <div id="workspace">
+            <aside class="sidebar">
+                <h2>文件列表</h2>
+                <div id="file-list"><p>文件列表将显示在此</p></div>
+                <button id="clear-all-btn" class="secondary-btn">清空列表</button>
+            </aside>
+
+            <section class="main-panel">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="convert">格式转换</button>
+                    <button class="tab-btn" data-tab="crop">图片裁剪</button>
+                </div>
+                <div id="convert-panel" class="tab-content active">
+                    <h3>批量格式转换设置</h3>
+                    <!-- ... 转换面板内容 ... -->
+                </div>
+                <div id="crop-panel" class="tab-content hidden">
+                    <div id="crop-placeholder"><p>裁剪区将显示在此</p></div>
+                    <!-- ... 裁剪面板内容 ... -->
+                </div>
+            </section>
+        </div>
     </main>
 
     <footer>
-        <p>由 AI 构建的纯前端图片处理工具 | <a href="#" id="show-changelog-link">查看更新日志 (v3.3)</a></p>
+        <p>由 AI 构建 | <a href="#" id="show-changelog-link">查看更新日志</a></p>
     </footer>
 
-    <!-- 新增：更新日志模态框的HTML结构 -->
-    <div id="changelog-modal" class="modal-overlay hidden">
+    <!-- 关键改动：移除了 hidden 类，让它默认就显示 -->
+    <div id="changelog-modal" class="modal-overlay">
         <div class="modal-content">
             <button class="modal-close-btn">×</button>
-            <h2>版本更新日志</h2>
+            <h2>版本更新日志 (静态内容)</h2>
             <div id="changelog-content-area">
-                <!-- 日志内容将动态加载到这里 -->
-                <p>正在加载...</p>
+                <p>如果此内容可见，则模态框的HTML和CSS正常。</p>
             </div>
         </div>
     </div>
-
-    <!-- 依赖库的JS链接保持不变 -->
+    
+    <!-- JS库引入保持不变 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
