@@ -1,18 +1,25 @@
 /**
- * 高级图片处理器 - 主脚本 (V3.5 - 内存泄漏终极修复版)
- * 使用可转移对象(Transferable Objects)来传递数据，彻底解决内存崩溃问题。
+ * 高级图片处理器 - 主脚本 (V3.6 - 流水线修复最终版)
+ *
+ * 核心修复：
+ * 彻底重构批量转换逻辑，从“一次性发送所有任务”改为“单任务流水线”模式。
+ * 主线程发送一个任务 -> Worker处理 -> Worker返回结果 -> 主线程更新进度并发送下一个任务。
+ * 这种模式确保了UI进度的实时、准确更新，解决了大批量处理时UI“假死”的问题。
  */
 
+// 采用立即执行函数表达式(IIFE)来创建独立作用域
 (function() {
     // 等待整个网页的DOM结构加载完成后再执行初始化函数
     document.addEventListener('DOMContentLoaded', init);
 
+    /**
+     * @description 所有应用的初始化逻辑都从这里开始
+     */
     function init() {
         // =======================================================
-        // 1. 全局元素获取 (与上一版相同)
+        // 1. 全局元素获取与非空检查 (保持不变)
         // =======================================================
         const elements = {
-            // ... (此处省略与上一版完全相同的元素获取代码)
             uploadArea: document.getElementById('upload-area'),
             dropZone: document.getElementById('drop-zone'),
             imageInput: document.getElementById('image-input'),
@@ -44,26 +51,29 @@
         for (const key in elements) {
             if (!elements[key]) {
                 console.error(`初始化失败：关键DOM元素'${key}'未找到。`);
-                document.body.innerHTML = '<p style="text-align: center; padding: 2rem; color: red;">页面加载失败，关键组件缺失。</p>';
+                document.body.innerHTML = '<p style="text-align: center; padding: 2rem; color: red;">页面加载失败，关键组件缺失。请联系管理员。</p>';
                 return;
             }
         }
-        
+
         // =======================================================
-        // 2. 状态变量和事件监听 (与上一版相同)
+        // 2. 全局状态变量 (保持不变)
         // =======================================================
         let fileStore = [];
         let cropper = null;
         let selectedFileId = null;
         let worker = null;
         let isChangelogLoaded = false;
-        
-        // --- 事件监听绑定 (与上一版完全相同，此处省略以保持简洁) ---
+
+        // =======================================================
+        // 3. 事件监听器绑定 (保持不变)
+        // =======================================================
         elements.browseBtn.addEventListener('click', () => elements.imageInput.click());
         elements.dropZone.addEventListener('dragover', (e) => { e.preventDefault(); elements.dropZone.classList.add('dragover'); });
         elements.dropZone.addEventListener('dragleave', () => elements.dropZone.classList.remove('dragover'));
         elements.dropZone.addEventListener('drop', (e) => { e.preventDefault(); elements.dropZone.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
         elements.imageInput.addEventListener('change', (e) => handleFiles(e.target.files));
+
         elements.tabBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 if (btn.disabled) return;
@@ -75,35 +85,41 @@
                 if (tab === 'crop' && selectedFileId) loadForCropping(selectedFileId);
             });
         });
+
         elements.clearAllBtn.addEventListener('click', () => {
             if (confirm('确定要清空所有文件吗？此操作不可撤销。')) switchToUploadView();
         });
+
         elements.formatSelect.addEventListener('change', () => { elements.qualityControl.style.display = elements.formatSelect.value === 'image/png' ? 'none' : 'block'; });
         elements.qualitySlider.addEventListener('input', () => { elements.qualityValue.textContent = parseFloat(elements.qualitySlider.value).toFixed(2); });
         elements.startConversionBtn.addEventListener('click', startBatchConversion);
         elements.resetCropBtn.addEventListener('click', () => { if (cropper) cropper.reset(); });
         elements.downloadCroppedBtn.addEventListener('click', downloadCroppedImage);
+        
         elements.showChangelogLink.addEventListener('click', (e) => { e.preventDefault(); openChangelogModal(); });
         elements.modalCloseBtn.addEventListener('click', closeChangelogModal);
         elements.changelogModal.addEventListener('click', (e) => { if (e.target === elements.changelogModal) closeChangelogModal(); });
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeChangelogModal(); });
-        // --- 省略结束 ---
 
 
         // =======================================================
-        // 3. 批量转换核心逻辑 (终极修复版)
+        // 4. 格式转换核心逻辑 (已重构为流水线模式)
         // =======================================================
-
-        /**
-         * @description 启动批量格式转换流程 (内存优化版)
-         */
         function startBatchConversion() {
             if (fileStore.length === 0) {
                 alert("请先添加至少一张图片。");
                 return;
             }
-            toggleUIInteraction(false);
-            elements.progressText.textContent = `准备开始处理 ${fileStore.length} 张图片...`;
+
+            toggleUIInteraction(false); // 禁用UI
+            
+            // --- 流水线设置 ---
+            const tasks = [...fileStore]; // 创建一个待处理任务队列
+            const zip = new JSZip();
+            let processedCount = 0;
+            const totalFiles = tasks.length;
+
+            elements.progressText.textContent = `准备开始处理 ${totalFiles} 张图片...`;
 
             if (worker) worker.terminate();
             try {
@@ -114,88 +130,98 @@
                 return;
             }
 
-            const zip = new JSZip();
-            let processedCount = 0;
-            const totalFiles = fileStore.length;
-
+            // 【流水线核心】当Worker发回消息时的处理逻辑
             worker.onmessage = (event) => {
-                processedCount++;
-                elements.progressText.textContent = `正在处理... (${processedCount}/${totalFiles})`;
                 const { status, blob, name, message } = event.data;
+                processedCount++;
+
+                // 更新UI进度
+                elements.progressText.textContent = `正在处理... (${processedCount}/${totalFiles})`;
+
                 if (status === 'success') {
                     const originalName = name.split('.').slice(0, -1).join('.');
                     const ext = elements.formatSelect.value.split('/')[1];
-                    zip.file(`${originalName}.${ext}`, blob);
+                    zip.file(`${originalName}.${ext}`, blob); // 将处理好的文件添加到zip包
                 } else {
                     console.error(`处理文件 ${name} 失败:`, message);
                 }
-                if (processedCount === totalFiles) {
-                    elements.progressText.textContent = '正在生成ZIP包，请稍候...';
-                    zip.generateAsync({ type: 'blob', compression: "DEFLATE" }).then(content => {
-                        downloadBlob(content, 'converted-images.zip');
-                        toggleUIInteraction(true);
-                        worker.terminate();
-                        worker = null;
-                    });
-                }
+
+                // 不论成功与否，都继续处理下一个任务
+                processNextTask();
             };
-            
+
             worker.onerror = (e) => {
                 console.error('Web Worker 发生错误:', e);
-                alert('后台处理发生严重错误，操作已中断。');
+                alert('后台处理发生严重错误，操作已中断。请检查浏览器控制台获取详细信息。');
                 toggleUIInteraction(true);
                 if (worker) worker.terminate();
                 worker = null;
             };
 
-            const format = elements.formatSelect.value;
-            const quality = format === 'image/png' ? undefined : parseFloat(elements.qualitySlider.value);
-
-            // 【【【 关键修复 】】】
-            // 逐个读取文件为ArrayBuffer，然后“转移”给Worker，而不是“复制”
-            fileStore.forEach(fileObj => {
-                const reader = new FileReader();
-                
-                // 文件读取完成后触发
-                reader.onload = (e) => {
-                    const buffer = e.target.result; // 这是ArrayBuffer
+            /**
+             * @description 流水线的核心驱动函数
+             */
+            async function processNextTask() {
+                // 检查任务队列是否还有任务
+                if (tasks.length > 0) {
+                    // 从队列头部取出一个任务
+                    const task = tasks.shift(); 
                     
-                    // 准备要发送的数据
-                    const message = {
-                        buffer: buffer,
-                        type: fileObj.file.type, // 文件MIME类型
-                        name: fileObj.file.name, // 文件名
-                        format: format,
-                        quality: quality,
-                    };
+                    try {
+                        const file = task.file;
+                        // 将文件内容异步读取为 ArrayBuffer
+                        const buffer = await file.arrayBuffer();
 
-                    // 使用“可转移对象”发送数据
-                    // 第二个参数 [buffer] 是一个列表，告诉浏览器哪些对象需要被转移所有权
-                    worker.postMessage(message, [buffer]);
-                };
-                
-                // 文件读取失败时触发
-                reader.onerror = (e) => {
-                     console.error("读取文件失败:", fileObj.file.name, e);
-                     // 即使单个文件读取失败，也需要更新计数，以避免流程卡住
-                     processedCount++; 
-                };
+                        // 准备发送给Worker的数据
+                        const format = elements.formatSelect.value;
+                        const quality = format === 'image/png' ? undefined : parseFloat(elements.qualitySlider.value);
 
-                // 以 ArrayBuffer 的形式读取文件
-                reader.readAsArrayBuffer(fileObj.file);
-            });
+                        // 将数据“转移”给Worker，启动处理
+                        worker.postMessage({
+                            buffer: buffer,
+                            type: file.type,
+                            name: file.name,
+                            format: format,
+                            quality: quality
+                        }, [buffer]); // [buffer]是实现零拷贝的关键
+
+                    } catch (error) {
+                        // 如果读取文件失败，手动触发一次 onmessage 来更新计数并继续
+                        worker.onmessage({
+                            data: {
+                                status: 'error',
+                                name: task.file.name,
+                                message: '文件读取失败'
+                            }
+                        });
+                    }
+                } else {
+                    // 所有任务都已发送并处理完毕
+                    elements.progressText.textContent = '正在生成ZIP包，请稍候...';
+                    
+                    zip.generateAsync({ type: 'blob', compression: "DEFLATE" })
+                        .then(content => {
+                            downloadBlob(content, 'converted-images.zip');
+                            toggleUIInteraction(true); // 恢复UI
+                            if (worker) worker.terminate();
+                            worker = null;
+                        })
+                        .catch(err => {
+                            console.error("打包ZIP文件失败:", err);
+                            alert("打包ZIP文件失败，请重试。");
+                            toggleUIInteraction(true);
+                        });
+                }
+            }
+
+            // 【流水线启动】手动调用一次，开始处理第一个任务
+            processNextTask();
         }
-        
-        // =======================================================
-        // 4. 其他功能函数 (与上一版相同)
-        // =======================================================
 
-        // 此处省略与上一版完全相同的其他功能函数
-        // handleFiles, updateFileListView, selectFile, switchToWorkspaceView,
-        // switchToUploadView, loadForCropping, downloadCroppedImage,
-        // openChangelogModal, closeChangelogModal, loadChangelog,
-        // toggleUIInteraction, downloadBlob
-        // ...
+
+        // =======================================================
+        // 5. 其他功能函数 (保持不变)
+        // =======================================================
         function handleFiles(files) {
             if (files.length === 0) return;
             const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
@@ -314,7 +340,7 @@
                 elements.changelogContentArea.innerHTML = sanitizedHtml;
             } catch (error) {
                 console.error('加载更新日志失败:', error);
-                elements.changelogContentArea.innerHTML = '<p style="color: red;">抱歉，无法加载更新日志。</p>';
+                elements.changelogContentArea.innerHTML = '<p style="color: red;">抱歉，无法加载更新日志。请检查网络连接或刷新页面重试。</p>';
             }
         }
 
