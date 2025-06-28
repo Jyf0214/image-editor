@@ -303,3 +303,53 @@ button:disabled {
 button.secondary-btn:disabled {
     background-color: #a0a0a0;
 }
+
+/* 更新日志样式 */
+#changelog {
+    max-width: 1400px;
+    width: 100%;
+    margin: 2rem auto;
+    padding: 1.5rem 2rem;
+    background-color: var(--surface-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+#changelog h2 {
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 0.5rem;
+}
+
+#changelog ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+#changelog li {
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+}
+
+#changelog li strong {
+    margin-right: 0.5em;
+    font-weight: 600;
+}
+
+#changelog li strong[class*="新增"] {
+    color: #28a745; /* 绿色 */
+}
+
+#changelog li strong[class*="修复"] {
+    color: #dc3545; /* 红色 */
+}
+
+/* 页脚样式 */
+footer {
+    text-align: center;
+    margin-top: 2rem;
+    padding: 1rem 0;
+    font-size: 0.9em;
+    color: #888;
+}
